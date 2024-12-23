@@ -1,0 +1,1 @@
+java -jar app.jar -calories -sort Apple/small Cheese Apple/big Sandwich/cheese/ham Sandwich/salad/chicken
