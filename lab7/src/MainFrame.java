@@ -54,7 +54,7 @@ public class MainFrame extends JFrame {
     private File selectedFile;
 
     public MainFrame() {
-        super(FRAME_TITLE);
+        super(FRAME_TITLE + " " + Integer.toString(RECEIVER_PORT));
         setMinimumSize(
                 new Dimension(FRAME_MINIMUM_WIDTH, FRAME_MINIMUM_HEIGHT));
         // Центрирование окна
