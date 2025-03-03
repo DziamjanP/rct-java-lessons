@@ -214,7 +214,6 @@ public class MainFrame extends JFrame {
     }
 
     private void selectFile(File file) {
-        System.out.println("SELECTED FILE " + file.getName());
         selectedFile = file;
         DecimalFormat df = new DecimalFormat("#.#");
         fileLabel.setText("Selected " + selectedFile.getName() + " " + df.format((double) selectedFile.length() / 1024.0) + " KiB");
@@ -316,10 +315,6 @@ public class MainFrame extends JFrame {
             }
         }
         
-        for (int i = 0; i < args.length; i++){
-            System.out.println(args[i]);
-        }
-        System.out.println("SENDER IS: " + Integer.toString(SENDER_PORT) + "\nRECEIVER IS: " + Integer.toString(RECEIVER_PORT));
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
