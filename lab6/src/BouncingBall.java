@@ -22,6 +22,8 @@ public class BouncingBall implements Runnable {
     private double speedX;
     private double speedY;
 
+    static private Obstruction obstruction;
+
     // Конструктор класса BouncingBall
     public BouncingBall(Field field) {
         // Необходимо иметь ссылку на поле, по которому прыгает мяч,
@@ -56,6 +58,10 @@ public class BouncingBall implements Runnable {
         thisThread.start();
     }
 
+    public static void addObstruction(Obstruction obstruction) {
+        BouncingBall.obstruction = obstruction;
+    }
+
     // Метод run() исполняется внутри потока. Когда он завершает работу,
     // то завершается и поток
     public void run() {
@@ -67,27 +73,37 @@ public class BouncingBall implements Runnable {
                 // Если движение разрешено - управление будет
                 // возвращено в метод
                 // В противном случае - активный поток заснѐт
+                double nextX = x + speedX;
+                double nextY = y + speedY;
                 field.canMove(this);
-                if (x + speedX <= radius) {
+                if (nextX <= radius) {
                     // Достигли левой стенки, отскакиваем право
                     speedX = -speedX;
                     x = radius;
-                } else if (x + speedX >= field.getWidth() - radius) {
+                } else if (nextX >= field.getWidth() - radius) {
                     // Достигли правой стенки, отскок влево
                     speedX = -speedX;
                     x = Double.valueOf(field.getWidth() - radius).intValue();
-                } else if (y + speedY <= radius) {
+                } else if (nextY <= radius) {
                     // Достигли верхней стенки
                     speedY = -speedY;
                     y = radius;
-                } else if (y + speedY >= field.getHeight() - radius) {
+                } else if (nextY >= field.getHeight() - radius) {
                     // Достигли нижней стенки
                     speedY = -speedY;
                     y = Double.valueOf(field.getHeight() - radius).intValue();
+                } else if (Math.abs(nextX - obstruction.getX()) <= radius + obstruction.getSizeX() / 2
+                            && Math.abs(nextY - obstruction.getY()) < obstruction.getSizeY() / 2){
+                    speedX = -speedX;
+                    x = obstruction.getX() + (radius + obstruction.getSizeX() / 2) * Math.signum(nextX - obstruction.getX()) + speedX;
+                } else if (Math.abs(nextY - obstruction.getY()) <= radius + obstruction.getSizeY() / 2
+                            && Math.abs(nextX - obstruction.getX()) < obstruction.getSizeX() / 2){
+                    speedY = -speedY;
+                    y = obstruction.getY() + (radius + obstruction.getSizeY() / 2) * Math.signum(nextY - obstruction.getY()) + speedY;
                 } else {
                     // Просто смещаемся
-                    x += speedX;
-                    y += speedY;
+                    x = nextX;
+                    y = nextY;
                 }
                 // Засыпаем на X миллисекунд, где X определяется
                 // исходя из скорости

@@ -33,6 +33,8 @@ public class Field extends JPanel {
 
         addMouseMotionListener(obstruction.new MouseMotionHandler());
 
+        BouncingBall.addObstruction(obstruction);
+
         // Запустить таймер
         repaintTimer.start();
     }
