@@ -13,6 +13,8 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
@@ -108,6 +110,16 @@ public class MainFrame extends JFrame {
                 }
             }
         });
+        // create 'Downloads' dir
+        try {
+            Files.createDirectories(Paths.get("Downloads"));
+        } catch (IOException e1) {
+            JOptionPane.showMessageDialog(this,
+                        "Не удалось создать папку для загрузок './Downloads'", "Ошибка",
+                        JOptionPane.ERROR_MESSAGE);
+            e1.printStackTrace();
+        }
+
         // Компоновка элементов панели "Сообщение"
         final GroupLayout layout2 = new GroupLayout(messagePanel);
         messagePanel.setLayout(layout2);
