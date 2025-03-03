@@ -231,7 +231,10 @@ public class MainFrame extends JFrame {
         try {
             // Получаем необходимые параметры
             final String senderName = textFieldFrom.getText();
-            final String destinationAddress = textFieldTo.getText();
+            final String destinationAddress = textFieldTo.getText().split(":")[0];
+            int port = SENDER_PORT;
+            if (textFieldTo.getText().split(":").length > 1)
+                port = Integer.parseInt(textFieldTo.getText().split(":")[1]);
             final String message = textAreaOutgoing.getText();
             // Убеждаемся, что поля не пустые
             if (senderName.isEmpty()) {
@@ -253,7 +256,7 @@ public class MainFrame extends JFrame {
                 return;
             }
             // Создаем сокет для соединения
-            final Socket socket = new Socket(destinationAddress, SENDER_PORT);
+            final Socket socket = new Socket(destinationAddress, port);
             // Открываем поток вывода данных
             final DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             // Записываем в поток имя
