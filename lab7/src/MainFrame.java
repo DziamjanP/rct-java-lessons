@@ -6,15 +6,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
+
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -42,6 +48,9 @@ public class MainFrame extends JFrame {
     private final JTextField textFieldTo;
     private final JTextArea textAreaIncoming;
     private final JTextArea textAreaOutgoing;
+    private final JLabel fileLabel;
+    private JFileChooser fileChooser;
+    private File selectedFile;
 
     public MainFrame() {
         super(FRAME_TITLE);
@@ -78,11 +87,18 @@ public class MainFrame extends JFrame {
                 sendMessage();
             }
         });
+        fileLabel = new JLabel("");
         final JButton fileButton = new JButton("Выбрать файл");
         fileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                if (fileChooser==null) {
+                    fileChooser = new JFileChooser();
+                    fileChooser.setCurrentDirectory(new File("."));
+                }
+                if (fileChooser.showOpenDialog(MainFrame.this) ==
+                        JFileChooser.APPROVE_OPTION) ;
+                selectFile(fileChooser.getSelectedFile());
             }
         });
         // Компоновка элементов панели "Сообщение"
@@ -101,6 +117,8 @@ public class MainFrame extends JFrame {
                                 .addComponent(textFieldTo))
                         .addComponent(scrollPaneOutgoing)
                         .addGroup(layout2.createSequentialGroup()
+                        .addComponent(fileLabel)
+                        .addGap(LARGE_GAP)
                         .addComponent(fileButton)
                         .addGap(LARGE_GAP)
                         .addComponent(sendButton)
@@ -116,7 +134,8 @@ public class MainFrame extends JFrame {
                 .addGap(MEDIUM_GAP)
                 .addComponent(scrollPaneOutgoing)
                 .addGap(MEDIUM_GAP)
-                .addGroup(layout2.createParallelGroup(Alignment.TRAILING)
+                .addGroup(layout2.createParallelGroup(Alignment.BASELINE)
+                .addComponent(fileLabel)
                 .addComponent(fileButton)
                 .addComponent(sendButton))
                 .addContainerGap());
@@ -171,6 +190,18 @@ public class MainFrame extends JFrame {
                 }
             }
         }).start();
+    }
+
+    private void selectFile(File file) {
+        System.out.println("SELECTED FILE " + file.getName());
+        selectedFile = file;
+        DecimalFormat df = new DecimalFormat("#.#");
+        fileLabel.setText("Selected " + selectedFile.getName() + " " + df.format((double) selectedFile.length() / 1024.0) + " KiB");
+    }
+
+    private void unselectFile() {
+        selectedFile = null;
+        fileLabel.setText("");
     }
 
     private void sendMessage() {
