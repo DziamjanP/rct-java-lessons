@@ -36,6 +36,8 @@ public class MainFrame extends JFrame {
     private static final int MEDIUM_GAP = 10;
     private static final int LARGE_GAP = 15;
     private static final int SERVER_PORT = 4567;
+    private static int SENDER_PORT = SERVER_PORT;
+    private static int RECEIVER_PORT = SERVER_PORT;
     private final JTextField textFieldFrom;
     private final JTextField textFieldTo;
     private final JTextArea textAreaIncoming;
@@ -125,7 +127,7 @@ public class MainFrame extends JFrame {
             @Override
             public void run() {
                 try {
-                    try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
+                    try (ServerSocket serverSocket = new ServerSocket(RECEIVER_PORT)) {
                         while (!Thread.interrupted()) {
                             final Socket socket = serverSocket.accept();
                             final DataInputStream in = new DataInputStream(
@@ -184,7 +186,7 @@ public class MainFrame extends JFrame {
                 return;
             }
             // Создаем сокет для соединения
-            final Socket socket = new Socket(destinationAddress, SERVER_PORT);
+            final Socket socket = new Socket(destinationAddress, SENDER_PORT);
             // Открываем поток вывода данных
             final DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             // Записываем в поток имя
@@ -212,6 +214,27 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String[] args) {
+        if (args.length >= 2){
+            if (args[0].equals("-pr")){
+                RECEIVER_PORT = Integer.parseInt(args[1]);
+            }
+            else if (args[0].equals("-ps")){
+                SENDER_PORT = Integer.parseInt(args[1]);
+            }
+        }
+        if (args.length == 4) {
+            if (args[2].equals("-pr")){
+                RECEIVER_PORT = Integer.parseInt(args[3]);
+            }
+            else if (args[2].equals("-ps")){
+                SENDER_PORT = Integer.parseInt(args[3]);
+            }
+        }
+        
+        for (int i = 0; i < args.length; i++){
+            System.out.println(args[i]);
+        }
+        System.out.println("SENDER IS: " + Integer.toString(SENDER_PORT) + "\nRECEIVER IS: " + Integer.toString(RECEIVER_PORT));
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
