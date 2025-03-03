@@ -8,7 +8,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -50,6 +49,7 @@ public class MainFrame extends JFrame {
     private final JTextArea textAreaOutgoing;
     private final JLabel fileLabel;
     private final JButton fileButton;
+    private final JLabel downloadStatusBar;
     private JFileChooser fileChooser;
     private File selectedFile;
 
@@ -89,6 +89,7 @@ public class MainFrame extends JFrame {
             }
         });
         fileLabel = new JLabel("");
+        downloadStatusBar = new JLabel("");
         fileButton = new JButton("Выбрать файл");
         fileButton.addActionListener(new ActionListener() {
             @Override
@@ -152,12 +153,15 @@ public class MainFrame extends JFrame {
                 .addContainerGap()
                 .addGroup(layout1.createParallelGroup()
                         .addComponent(scrollPaneIncoming)
+                        .addComponent(downloadStatusBar)
                         .addComponent(messagePanel))
                 .addContainerGap());
         layout1.setVerticalGroup(layout1.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(scrollPaneIncoming)
-                .addGap(MEDIUM_GAP)
+                .addGap(SMALL_GAP)
+                .addComponent(downloadStatusBar)
+                .addGap(SMALL_GAP)
                 .addComponent(messagePanel)
                 .addContainerGap());
         // Создание и запуск потока-обработчика запросов
@@ -179,9 +183,8 @@ public class MainFrame extends JFrame {
                                 final String fileName = in.readUTF();
                                 final int fileSize = in.readInt();
                                 final byte[] fileData = in.readNBytes(fileSize);
-                                DataOutputStream out = new DataOutputStream(new FileOutputStream("Downloads/"+fileName));
-                                out.write(fileData);
-                                out.close();
+                                Thread thread = new Thread(new FileLoader("Downloads/"+fileName, fileData, MainFrame.this, downloadStatusBar));
+                                thread.start();
                                 DecimalFormat df = new DecimalFormat("#.#");
                                 fileStr = "<attached file ["
                                         + df.format((double) fileSize / 1024.0) + " KiB" + "]: "
