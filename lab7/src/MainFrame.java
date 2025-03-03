@@ -49,6 +49,7 @@ public class MainFrame extends JFrame {
     private final JTextArea textAreaIncoming;
     private final JTextArea textAreaOutgoing;
     private final JLabel fileLabel;
+    private final JButton fileButton;
     private JFileChooser fileChooser;
     private File selectedFile;
 
@@ -88,7 +89,7 @@ public class MainFrame extends JFrame {
             }
         });
         fileLabel = new JLabel("");
-        final JButton fileButton = new JButton("Выбрать файл");
+        fileButton = new JButton("Выбрать файл");
         fileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,9 +97,14 @@ public class MainFrame extends JFrame {
                     fileChooser = new JFileChooser();
                     fileChooser.setCurrentDirectory(new File("."));
                 }
-                if (fileChooser.showOpenDialog(MainFrame.this) ==
-                        JFileChooser.APPROVE_OPTION) ;
-                selectFile(fileChooser.getSelectedFile());
+                if (selectedFile != null) {
+                    unselectFile();
+                }
+                else {
+                    if (fileChooser.showOpenDialog(MainFrame.this) ==
+                            JFileChooser.APPROVE_OPTION) ;
+                    selectFile(fileChooser.getSelectedFile());
+                }
             }
         });
         // Компоновка элементов панели "Сообщение"
@@ -212,11 +218,13 @@ public class MainFrame extends JFrame {
         selectedFile = file;
         DecimalFormat df = new DecimalFormat("#.#");
         fileLabel.setText("Selected " + selectedFile.getName() + " " + df.format((double) selectedFile.length() / 1024.0) + " KiB");
+        fileButton.setText("Отменить выбор");
     }
 
     private void unselectFile() {
         selectedFile = null;
         fileLabel.setText("");
+        fileButton.setText("Выбрать файл");
     }
 
     private void sendMessage() {
