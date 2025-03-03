@@ -232,8 +232,11 @@ public class MainFrame extends JFrame {
             final String senderName = textFieldFrom.getText();
             final String destinationAddress = textFieldTo.getText().split(":")[0];
             int port = SENDER_PORT;
-            if (textFieldTo.getText().split(":").length > 1)
+            if (textFieldTo.getText().split(":").length > 1) 
                 port = Integer.parseInt(textFieldTo.getText().split(":")[1]);
+            if (port > 65535 || port < 0) {
+                throw new NumberFormatException("Port is out of range [0 - 65535]");
+            }
             final String message = textAreaOutgoing.getText();
             // Убеждаемся, что поля не пустые
             if (senderName.isEmpty()) {
@@ -293,6 +296,11 @@ public class MainFrame extends JFrame {
             e.printStackTrace();
             JOptionPane.showMessageDialog(MainFrame.this,
                     "Не удалось отправить сообщение", "Ошибка",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(MainFrame.this,
+                    "Неверно указан порт", "Ошибка",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
