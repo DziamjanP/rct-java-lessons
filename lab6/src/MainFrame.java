@@ -17,6 +17,8 @@ public class MainFrame extends JFrame {
     private static final int HEIGHT = 500;
     private JMenuItem pauseMenuItem;
     private JMenuItem resumeMenuItem;
+    private JMenuItem addObstructionMenuItem;
+    private JMenuItem removeObstructionMenuItem;
     // Поле, по которому прыгают мячи
     private Field field = new Field();
 
@@ -45,6 +47,20 @@ public class MainFrame extends JFrame {
                 }
             }
         };
+        Action addObstructionAction = new AbstractAction("Добавить препятствие") {
+            public void actionPerformed(ActionEvent event) {
+                field.addObstruction();
+                addObstructionMenuItem.setEnabled(false);
+                removeObstructionMenuItem.setEnabled(true);
+            }
+        };
+        Action removeObstructionAction = new AbstractAction("Убрать препятствие") {
+            public void actionPerformed(ActionEvent event) {
+                field.removeObstruction();
+                addObstructionMenuItem.setEnabled(true);
+                removeObstructionMenuItem.setEnabled(false);
+            }
+        };
         menuBar.add(ballMenu);
         ballMenu.add(addBallAction);
         JMenu controlMenu = new JMenu("Управление");
@@ -56,6 +72,9 @@ public class MainFrame extends JFrame {
                 resumeMenuItem.setEnabled(true);
             }
         };
+        addObstructionMenuItem = controlMenu.add(addObstructionAction);
+        removeObstructionMenuItem = controlMenu.add(removeObstructionAction);
+        removeObstructionMenuItem.setEnabled(false);
         pauseMenuItem = controlMenu.add(pauseAction);
         pauseMenuItem.setEnabled(false);
         Action resumeAction = new AbstractAction("Возобновить движение") {

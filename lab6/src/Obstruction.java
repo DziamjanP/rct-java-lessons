@@ -14,15 +14,29 @@ public class Obstruction implements Runnable {
 
     private Color color;
 
+    private boolean enabled = false;
+
     public Obstruction() {
         color = new Color((float) Math.random(), (float) Math.random(),
                 (float) Math.random());
         
-        Thread thisThread = new Thread(this);
-        // Запускаем поток
-        thisThread.start();
+            }
+            
+    public void enable() {
+        if (!enabled){
+            // Запускаем поток
+            Thread thisThread = new Thread(this);
+            thisThread.start();
+            enabled = true;
+        }
     }
     
+    public void disable() {
+        if (enabled) {
+            enabled = false;
+        }
+    }
+
     public class MouseMotionHandler implements MouseMotionListener {
         @Override
         public void mouseDragged(java.awt.event.MouseEvent e) {
@@ -54,10 +68,13 @@ public class Obstruction implements Runnable {
 
     @Override
     public void run() {
-        
+        while(enabled) {
+            
+        }
     }
 
     public void paint(Graphics2D canvas) {
+        if (!enabled) return;
         canvas.setColor(color);
         canvas.setPaint(color);
         Rectangle2D.Double rect = new Rectangle2D.Double(x - sizeX / 2, y - sizeY / 2, sizeX, sizeY);

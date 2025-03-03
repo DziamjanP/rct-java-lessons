@@ -22,7 +22,7 @@ public class BouncingBall implements Runnable {
     private double speedX;
     private double speedY;
 
-    static private Obstruction obstruction;
+    private static Obstruction obstruction;
 
     // Конструктор класса BouncingBall
     public BouncingBall(Field field) {
@@ -61,6 +61,10 @@ public class BouncingBall implements Runnable {
     public static void addObstruction(Obstruction obstruction) {
         BouncingBall.obstruction = obstruction;
     }
+    
+    public static void removeObstruction() {
+        BouncingBall.obstruction = null;
+    }
 
     // Метод run() исполняется внутри потока. Когда он завершает работу,
     // то завершается и поток
@@ -92,18 +96,31 @@ public class BouncingBall implements Runnable {
                     // Достигли нижней стенки
                     speedY = -speedY;
                     y = Double.valueOf(field.getHeight() - radius).intValue();
-                } else if (Math.abs(nextX - obstruction.getX()) <= radius + obstruction.getSizeX() / 2
-                            && Math.abs(nextY - obstruction.getY()) < obstruction.getSizeY() / 2){
-                    speedX = -speedX;
-                    x = obstruction.getX() + (radius + obstruction.getSizeX() / 2) * Math.signum(nextX - obstruction.getX()) + speedX;
-                } else if (Math.abs(nextY - obstruction.getY()) <= radius + obstruction.getSizeY() / 2
-                            && Math.abs(nextX - obstruction.getX()) < obstruction.getSizeX() / 2){
-                    speedY = -speedY;
-                    y = obstruction.getY() + (radius + obstruction.getSizeY() / 2) * Math.signum(nextY - obstruction.getY()) + speedY;
                 } else {
-                    // Просто смещаемся
-                    x = nextX;
-                    y = nextY;
+                    if (obstruction != null) {
+                        if (Math.abs(nextX - obstruction.getX()) <= radius + obstruction.getSizeX() / 2
+                                && Math.abs(nextY - obstruction.getY()) < obstruction.getSizeY() / 2) {
+                            speedX = -speedX;
+                            x = obstruction.getX()
+                                    + (radius + obstruction.getSizeX() / 2) * Math.signum(nextX - obstruction.getX())
+                                    + speedX;
+                        } else if (Math.abs(nextY - obstruction.getY()) <= radius + obstruction.getSizeY() / 2
+                                && Math.abs(nextX - obstruction.getX()) < obstruction.getSizeX() / 2) {
+                            speedY = -speedY;
+                            y = obstruction.getY()
+                                    + (radius + obstruction.getSizeY() / 2) * Math.signum(nextY - obstruction.getY())
+                                    + speedY;
+                        } else {
+                            // Просто смещаемся
+                            x = nextX;
+                            y = nextY;
+                        }
+                    }
+                    else {
+                        // Просто смещаемся
+                        x = nextX;
+                        y = nextY;
+                    }
                 }
                 // Засыпаем на X миллисекунд, где X определяется
                 // исходя из скорости

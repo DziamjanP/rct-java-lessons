@@ -33,10 +33,18 @@ public class Field extends JPanel {
 
         addMouseMotionListener(obstruction.new MouseMotionHandler());
 
-        BouncingBall.addObstruction(obstruction);
-
         // Запустить таймер
         repaintTimer.start();
+    }
+
+    public void addObstruction() {
+        obstruction.enable();
+        BouncingBall.addObstruction(obstruction);
+    }
+
+    public void removeObstruction() {
+        obstruction.disable();
+        BouncingBall.removeObstruction();
     }
 
     // Унаследованный от JPanel метод перерисовки компонента
