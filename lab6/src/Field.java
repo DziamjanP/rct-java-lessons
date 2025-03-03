@@ -14,6 +14,8 @@ public class Field extends JPanel {
     private boolean paused;
     // Динамический список скачущих мячей
     private ArrayList<BouncingBall> balls = new ArrayList<BouncingBall>(10);
+
+    private Obstruction obstruction = new Obstruction();
     // Класс таймер отвечает за регулярную генерацию событий ActionEvent
     // При создании его экземпляра используется анонимный класс,
     // реализующий интерфейс ActionListener
@@ -28,6 +30,9 @@ public class Field extends JPanel {
     public Field() {
         // Установить цвет заднего фона белым
         setBackground(Color.WHITE);
+
+        addMouseMotionListener(obstruction.new MouseMotionHandler());
+
         // Запустить таймер
         repaintTimer.start();
     }
@@ -41,6 +46,8 @@ public class Field extends JPanel {
         for (BouncingBall ball : balls) {
             ball.paint(canvas);
         }
+
+        obstruction.paint(canvas);
     }
 
     // Метод добавления нового мяча в список
