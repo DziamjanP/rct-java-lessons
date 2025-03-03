@@ -78,6 +78,13 @@ public class MainFrame extends JFrame {
                 sendMessage();
             }
         });
+        final JButton fileButton = new JButton("Выбрать файл");
+        fileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //
+            }
+        });
         // Компоновка элементов панели "Сообщение"
         final GroupLayout layout2 = new GroupLayout(messagePanel);
         messagePanel.setLayout(layout2);
@@ -93,7 +100,11 @@ public class MainFrame extends JFrame {
                                 .addGap(SMALL_GAP)
                                 .addComponent(textFieldTo))
                         .addComponent(scrollPaneOutgoing)
-                        .addComponent(sendButton))
+                        .addGroup(layout2.createSequentialGroup()
+                        .addComponent(fileButton)
+                        .addGap(LARGE_GAP)
+                        .addComponent(sendButton)
+                        ))
                 .addContainerGap());
         layout2.setVerticalGroup(layout2.createSequentialGroup()
                 .addContainerGap()
@@ -105,7 +116,9 @@ public class MainFrame extends JFrame {
                 .addGap(MEDIUM_GAP)
                 .addComponent(scrollPaneOutgoing)
                 .addGap(MEDIUM_GAP)
-                .addComponent(sendButton)
+                .addGroup(layout2.createParallelGroup(Alignment.TRAILING)
+                .addComponent(fileButton)
+                .addComponent(sendButton))
                 .addContainerGap());
         // Компоновка элементов фрейма
         final GroupLayout layout1 = new GroupLayout(getContentPane());
