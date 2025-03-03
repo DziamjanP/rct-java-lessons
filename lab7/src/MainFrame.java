@@ -8,7 +8,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -166,6 +166,21 @@ public class MainFrame extends JFrame {
                                     socket.getInputStream());
                             // Читаем имя отправителя
                             final String senderName = in.readUTF();
+
+                            final boolean hasFile = in.readBoolean();
+                            String fileStr = "";
+                            if (hasFile) {
+                                final String fileName = in.readUTF();
+                                final int fileSize = in.readInt();
+                                final byte[] fileData = in.readNBytes(fileSize);
+                                DataOutputStream out = new DataOutputStream(new FileOutputStream("Downloads/"+fileName));
+                                out.write(fileData);
+                                out.close();
+                                DecimalFormat df = new DecimalFormat("#.#");
+                                fileStr = "<attached file ["
+                                        + df.format((double) fileSize / 1024.0) + " KiB" + "]: "
+                                        + fileName + ">\n";
+                            }
                             // Читаем сообщение
                             final String message = in.readUTF();
                             // Закрываем соединение
@@ -178,7 +193,7 @@ public class MainFrame extends JFrame {
                             // Выводим сообщение в текстовую область
                             textAreaIncoming.append(senderName +
                                     " (" + address + "): " +
-                                    message + "\n");
+                                    message + "\n" + fileStr);
                         }
                     }
 
@@ -235,6 +250,14 @@ public class MainFrame extends JFrame {
             final DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             // Записываем в поток имя
             out.writeUTF(senderName);
+            out.writeBoolean(selectedFile != null);
+            if (selectedFile != null) {
+                out.writeUTF(selectedFile.getName());
+                out.writeInt((int) selectedFile.length());
+                DataInputStream in = new DataInputStream(new FileInputStream(selectedFile));
+                out.write(in.readAllBytes());
+                in.close();
+            }
             // Записываем в поток сообщение
             out.writeUTF(message);
             // Закрываем сокет
@@ -242,6 +265,13 @@ public class MainFrame extends JFrame {
             // Помещаем сообщения в текстовую область вывода
             textAreaIncoming.append("Я -> " + destinationAddress + ": "
                     + message + "\n");
+            if (selectedFile != null) {
+                DecimalFormat df = new DecimalFormat("#.#");
+                textAreaIncoming.append("<attached file ["
+                + df.format((double) selectedFile.length() / 1024.0) + " KiB" + "]: "
+                + selectedFile.getName() + ">\n");
+                unselectFile();
+            }
             // Очищаем текстовую область ввода сообщения
             textAreaOutgoing.setText("");
         } catch (UnknownHostException e) {
