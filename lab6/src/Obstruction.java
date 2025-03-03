@@ -36,6 +36,22 @@ public class Obstruction implements Runnable {
         }
     }
 
+    public double getX(){
+        return x;
+    }
+
+    public double getY(){
+        return y;
+    }
+
+    public double getSizeX(){
+        return sizeX;
+    }
+
+    public double getSizeY(){
+        return sizeY;
+    }
+
     @Override
     public void run() {
         
