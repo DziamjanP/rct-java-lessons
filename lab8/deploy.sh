@@ -1,1 +1,1 @@
-cp target/jwebapp.war /opt/tomcat/webapps/lab-webapp.war
+cp target/jwebapp.war /opt/tomcat/webapps/chat.war
