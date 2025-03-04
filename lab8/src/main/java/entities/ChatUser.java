@@ -1,6 +1,8 @@
 package entities;
 
-public class ChatUser {
+import java.io.Serializable;
+
+public class ChatUser implements Serializable {
     // Имя пользователя
     private String name;
     // Последнее время взаимодействия с сервером в количестве микросекунд,

@@ -1,6 +1,8 @@
 package entities;
 
-public class ChatMessage {
+import java.io.Serializable;
+
+public class ChatMessage implements Serializable{
     // Текст сообщения
     private String message;
     // Автор сообщения
