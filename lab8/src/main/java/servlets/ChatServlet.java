@@ -24,7 +24,7 @@ public class ChatServlet extends HttpServlet {
     protected ArrayList<ChatMessage> messages;
 
     private static ArrayList<ChatServlet> liveServlets = new ArrayList<ChatServlet>();
-    private static String dumpPath;
+    private static final String dumpPath = "<specify dump path>";
 
     @SuppressWarnings("unchecked")
     public void init() throws ServletException {
