@@ -52,6 +52,7 @@ public class ChatServlet extends HttpServlet {
         }
         if (liveServlets.isEmpty()){
             loadMessages();
+            loadActiveUsers();
         }
         liveServlets.add(this);
     }
@@ -75,15 +76,33 @@ public class ChatServlet extends HttpServlet {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    void loadActiveUsers() {
+        try {
+            DataInputStream in = new DataInputStream(new FileInputStream(dumpPath + "/ausers.chatdata"));
+            ObjectInputStream ois = new ObjectInputStream(in);
+            activeUsers = (HashMap<String, ChatUser>) ois.readObject();
+            ois.close();
+            in.close();
+        } catch (FileNotFoundException e) {
+            // oh no
+        } catch (IOException e) {
+            // not cool
+        } catch (ClassNotFoundException e) {
+            // i can do nothing
+        }
+    }
+
     public void destroy() {
         super.destroy();
         liveServlets.remove(this);
         if (liveServlets.isEmpty()) {
-            dumpData();
+            dumpMessages();
+            dumpActiveUsers();
         }
     }
 
-    private void dumpData() {
+    private void dumpMessages() {
         try {
             DataOutputStream out = new DataOutputStream(new FileOutputStream(dumpPath + "/messages.chatdata"));
             ObjectOutputStream oos = new ObjectOutputStream(out);
@@ -91,6 +110,20 @@ public class ChatServlet extends HttpServlet {
             for (int i = 0; i < messages.size(); i++) {
                 oos.writeObject(messages.get(i));
             }
+            oos.close();
+            out.close();
+        } catch (FileNotFoundException e) {
+            //well thats sad
+        } catch (IOException e) {
+            //also sad
+        }
+    }
+
+    private void dumpActiveUsers() {
+        try {
+            DataOutputStream out = new DataOutputStream(new FileOutputStream(dumpPath + "/ausers.chatdata"));
+            ObjectOutputStream oos = new ObjectOutputStream(out);
+            oos.writeObject(activeUsers);
             oos.close();
             out.close();
         } catch (FileNotFoundException e) {
