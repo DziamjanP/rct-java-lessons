@@ -1,0 +1,1 @@
+cp target/adboard.war /opt/tomcat/webapps/
