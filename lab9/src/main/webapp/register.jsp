@@ -4,6 +4,11 @@ pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="jakarta.tags.core" %>
 <%-- Импортировать собственную библиотеку теговых файлов --%>
 <%@taglib prefix="my" tagdir="/WEB-INF/tags" %>
+<%
+    int randomNumber = (int)(java.lang.Math.random() * (1070));
+    pageContext.setAttribute("checkId", randomNumber);
+%>
+<c:set var="captchaCheckId" value="${checkId}" scope="session"/>
 <html>
     <head>
         <title>Регистрация нового пользователя</title>
@@ -41,6 +46,10 @@ pageEncoding="UTF-8" %>
                         <%-- Начальное значение поля email равно
                         свойству email сохранѐнного в сессии JavaBean'а --%>
                         <td><input type="text" name="email" value="${sessionScope.userData.email}"></td>
+                    </tr>
+                    <tr>
+                        <td><img src="/adboard/captcha?id=${checkId}" ></img></td>
+                        <td><input type="text" name="captcha" value="${sessionScope.userData.captcha}"></td>
                     </tr>
                     <tr>
                         <td></td>

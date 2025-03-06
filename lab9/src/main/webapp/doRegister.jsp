@@ -12,6 +12,7 @@
 <jsp:useBean id="userData" class="entities.User" scope="session" />
 <%-- Скопировать в bean все параметры из HTTP-запроса --%>
 <jsp:setProperty name="userData" property="*" />
+<jsp:setProperty name="userData" property="checkId" value="${sessionScope.captchaCheckId}"/>
 <%-- Обратиться к собственному тегу для сохранения пользователя --%>
 <ad:addUser user="${userData}" />
 <%-- Проанализировать переменную errorMessage в области видимости session --%>
