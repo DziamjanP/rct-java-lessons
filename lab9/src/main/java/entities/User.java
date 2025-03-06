@@ -15,6 +15,9 @@ public class User implements Serializable, Identifiable {
     // Email пользователя
     private String email = "";
 
+    private String captcha = "";
+    private int checkId = -1;
+
     public int getId() {
         return id;
     }
@@ -53,6 +56,22 @@ public class User implements Serializable, Identifiable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
+    }
+
+    public int getCheckId() {
+        return checkId;
+    }
+
+    public void setCheckId(int checkId) {
+        this.checkId = checkId;
     }
 
     public int hashCode() {
