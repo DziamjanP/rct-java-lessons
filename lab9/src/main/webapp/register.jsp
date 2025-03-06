@@ -49,7 +49,7 @@ pageEncoding="UTF-8" %>
                     </tr>
                     <tr>
                         <td><img src="/adboard/captcha?id=${checkId}" ></img></td>
-                        <td><input type="text" name="captcha" value="${sessionScope.userData.captcha}"></td>
+                        <td><input type="text" name="captcha" value=""></td>
                     </tr>
                     <tr>
                         <td></td>
