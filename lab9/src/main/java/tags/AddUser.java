@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
@@ -35,7 +36,7 @@ public class AddUser extends SimpleTagSupport {
                  URLEncoder.encode(Integer.toString(checkId), "UTF-8"),
                  URLEncoder.encode(captcha, "UTF-8"));
                  
-            URL url = new URL("http://localhost:8080/adboard/captcha" + "?" + query);
+            URL url = URI.create("http://localhost:8080/adboard/captcha" + "?" + query).toURL();
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("POST");
             Map<String, List<String>> header = conn.getHeaderFields();
