@@ -1,5 +1,6 @@
 package servlets;
 
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -58,5 +59,18 @@ public class CaptchaServlet extends HttpServlet {
         }
         out.close();
         in.close();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ServletContext context = getServletContext();
+        int id = Integer.parseInt(request.getParameter("id"));
+        id %= getFileCount(context.getRealPath("WEB-INF/captcha"));
+        String captcha = request.getParameter("captcha") + ".png";
+        String filename = listFiles(context.getRealPath("WEB-INF/captcha")).get(id);
+        DataOutputStream out = new DataOutputStream(response.getOutputStream());
+        System.out.println("Comparing " + filename + " and " + captcha);
+        out.writeBoolean(filename.equals(captcha));
+        out.close();
     }
 }
